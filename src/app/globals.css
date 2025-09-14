@@ -1,26 +1,464 @@
 @import "tailwindcss";
 
+/* ---------- Theme tokens (light/dark) ---------- */
 :root {
+  /* Base palette */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0b1020; /* deep charcoal/blue */
+  --muted: #6b7280; /* neutral gray text */
+  --surface: #f7f8fa; /* soft panel bg */
+  --border: #e5e7eb; /* subtle borders */
+
+  /* Accent (calm blue) */
+  --accent: #1b6bff; /* primary brand */
+  --accent-600: #1557cc; /* hover */
+  --accent-50: #e8f0ff; /* tinted bg */
+
+  /* Link */
+  --link: var(--accent);
+  --link-hover: var(--accent-600);
+
+  /* Shadows & radii */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 24px rgba(10, 24, 61, 0.06);
+  --radius: 14px;
 }
 
+/* Optional: map to Tailwind v4 theme */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-50: var(--accent-50);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #eaeef7;
+    --muted: #aab2c0;
+    --surface: #111318;
+    --border: #222632;
+
+    --accent: #82aaff;
+    --accent-600: #6e92d6;
+    --accent-50: #0f1a33;
   }
+}
+
+/* ---------- Base element resets ---------- */
+html,
+body {
+  height: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings: clean, confident, not shouty */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--foreground);
+}
+h1 {
+  font-size: clamp(2rem, 2.6vw + 1rem, 3rem);
+}
+h2 {
+  font-size: clamp(1.5rem, 1.2vw + 1rem, 2.125rem);
+}
+h3 {
+  font-size: clamp(1.25rem, 0.8vw + 1rem, 1.5rem);
+}
+
+p {
+  color: var(--muted);
+}
+
+/* Links */
+a {
+  color: var(--link);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 0.06em;
+}
+a:hover {
+  color: var(--link-hover);
+}
+
+/* Images: rounded corners by default */
+img,
+.img-rounded {
+  border-radius: 12px;
+}
+
+/* ---------- Layout helpers ---------- */
+.site-container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+.section {
+  padding-block: clamp(2.5rem, 4vw, 4rem);
+}
+.section-narrow {
+  max-width: 72ch;
+}
+
+/* ---------- Liquid Glass System ---------- */
+
+/* Generic translucent glass background + blur */
+.glass {
+  background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--background) 78%, transparent),
+      color-mix(in srgb, var(--background) 92%, transparent)
+    ),
+    radial-gradient(
+      120% 120% at 100% -20%,
+      color-mix(in srgb, var(--accent) 6%, transparent),
+      transparent 50%
+    );
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* Adds a subtle inner highlight + hairline border via pseudo element */
+.glass-border {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+.glass-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0)
+    )
+    border-box;
+  mask: linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0) border-box;
+  -webkit-mask: linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0) border-box;
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+/* Fine noise to sell the glass look */
+.noise {
+  position: relative;
+}
+.noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Liquid glare sweep for header/footer */
+.liquid-glare {
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glare::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20%;
+  background: radial-gradient(
+      60% 40% at 10% 0%,
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0) 60%
+    ),
+    radial-gradient(
+      50% 45% at 90% -10%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 60%
+    );
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+/* Header composition */
+.header-glass {
+  @apply sticky top-0 z-50;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+.header-glass {
+  /* combine layers */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--background) 68%, transparent),
+    color-mix(in srgb, var(--background) 92%, transparent)
+  );
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+.header-glass.liquid-glare::before {
+  opacity: 0.7;
+}
+
+/* Footer composition */
+.footer-glass {
+  border-top: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--background) 92%, transparent),
+    color-mix(in srgb, var(--background) 100%, transparent)
+  );
+  backdrop-filter: blur(10px) saturate(1.1);
+  position: relative;
+}
+.footer-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 40%, transparent),
+    transparent
+  );
+  opacity: 0.4;
+}
+
+/* Nav links */
+.nav-link {
+  font-weight: 600;
+  color: var(--foreground);
+  text-decoration: none;
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.18s ease;
+  opacity: 0.65;
+}
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Icon button minimal */
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  background: color-mix(in srgb, var(--background) 78%, transparent);
+  backdrop-filter: blur(10px) saturate(1.1);
+}
+
+/* Mobile drawer glass panel */
+.mobile-drawer {
+  position: absolute;
+  top: 0;
+  right: 0; /* anchor to right */
+  left: auto;
+  height: 100%;
+  width: 80%;
+  max-width: 20rem;
+  padding: 1.25rem;
+}
+
+@media (max-width: 360px) {
+  .mobile-drawer {
+    width: 85%;
+    max-width: 18rem;
+  }
+}
+
+.glass-panel {
+  border-radius: 0 16px 16px 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--background) 65%, transparent),
+    color-mix(in srgb, var(--background) 92%, transparent)
+  );
+  backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+.nav-item:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* ---------- Buttons (pill, corporate) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  font-weight: 700;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.05s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+.btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  outline-offset: 2px;
+}
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border-color: transparent;
+}
+.btn-primary:hover {
+  background: var(--accent-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--foreground);
+}
+.btn-ghost:hover {
+  background: var(--accent-50);
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
+}
+
+/* ---------- Cards (soft, elevated) ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: clip;
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+.card-body {
+  padding: 1.25rem;
+}
+.card-title {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--foreground);
+}
+.card-meta {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  background: radial-gradient(
+      1200px 600px at 80% -20%,
+      color-mix(in srgb, var(--accent) 18%, white) 0%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, #f9fafb 0%, #ffffff 60%);
+}
+@media (prefers-color-scheme: dark) {
+  .hero {
+    background: radial-gradient(
+        900px 480px at 80% -20%,
+        color-mix(in srgb, var(--accent) 20%, #0a0a0a) 0%,
+        transparent 60%
+      ),
+      linear-gradient(180deg, #0a0a0a 0%, #0a0a0a 60%);
+  }
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--background) 66%, transparent) 100%
+  );
+}
+
+/* ---------- Utilities ---------- */
+.link-underline {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+  text-underline-offset: 4px;
+}
+.link-underline:hover {
+  text-decoration-color: currentColor;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--muted);
+}
+
+/* ---------- Forms ---------- */
+input,
+textarea,
+select {
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.65rem 0.8rem;
+}
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  /* kept for legacy usage if needed */
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+
+/* ---------- Small helpers ---------- */
+.hr {
+  height: 1px;
+  background: var(--border);
+  width: 100%;
 }
