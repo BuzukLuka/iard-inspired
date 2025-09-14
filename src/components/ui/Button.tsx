@@ -1,13 +1,15 @@
 import { ButtonHTMLAttributes } from "react";
 import cn from "classnames";
 
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "outline";
+};
+
 export default function Button({
   className,
+  variant = "primary",
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "outline";
-}) {
-  const variant = (props as any).variant ?? "primary";
+}: ButtonProps) {
   return (
     <button
       {...props}
