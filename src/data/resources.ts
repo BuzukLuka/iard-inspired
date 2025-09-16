@@ -15,7 +15,7 @@ export const resources: Resource[] = [
     title: "Global Standards Toolkit",
     type: "Toolkit",
     year: 2025,
-    image: "/placeholder.jpg",
+    image: "/14.png",
     summary:
       "Practical steps to implement responsible marketing and sales standards.",
     downloadUrl: "#",
@@ -25,7 +25,7 @@ export const resources: Resource[] = [
     title: "Harmful Drinking: Trends & Data 2024",
     type: "Report",
     year: 2024,
-    image: "/placeholder.jpg",
+    image: "/17.png",
     summary:
       "An annual review of evidence around harmful drinking and effective interventions.",
     downloadUrl: "#",
@@ -35,7 +35,7 @@ export const resources: Resource[] = [
     title: "Youth Education Brief",
     type: "Brief",
     year: 2023,
-    image: "/placeholder.jpg",
+    image: "/15.png",
     summary:
       "Evidence highlights for policymakers designing youth education programs.",
     slug: "youth-education-brief",

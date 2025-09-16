@@ -14,7 +14,7 @@ export const initiatives: Initiative[] = [
     slug: "marketing-codes",
     summary:
       "Strengthening responsible marketing standards and enforcement across regions.",
-    image: "/placeholder.jpg",
+    image: "/14.png",
     tags: ["Policy", "Standards"],
   },
   {
@@ -23,7 +23,7 @@ export const initiatives: Initiative[] = [
     slug: "harmful-drinking",
     summary:
       "Programs that reduce harmful drinking through community partnerships and education.",
-    image: "/placeholder.jpg",
+    image: "/15.png",
     tags: ["Health", "Community"],
   },
   {
@@ -32,7 +32,7 @@ export const initiatives: Initiative[] = [
     slug: "underage-prevention",
     summary:
       "Evidence-based materials empowering parents and educators to prevent underage drinking.",
-    image: "/placeholder.jpg",
+    image: "/16.png",
     tags: ["Youth", "Education"],
   },
   {
@@ -41,7 +41,7 @@ export const initiatives: Initiative[] = [
     slug: "drink-driving",
     summary:
       "Solutions and campaigns that reduce drink driving through tech, policy, and enforcement.",
-    image: "/placeholder.jpg",
+    image: "/17.png",
     tags: ["Safety", "Policy"],
   },
 ];

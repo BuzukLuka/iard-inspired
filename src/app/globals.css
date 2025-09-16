@@ -462,3 +462,34 @@ select:focus {
   background: var(--border);
   width: 100%;
 }
+
+
+html, body {
+  overscroll-behavior: none;
+  overflow-x: hidden; /* drawer translate-аас үүдэлтэй хөндлөн scrollbar-ыг хаана */
+}
+
+/* ===== Responsive gutters (mobile-д илүү том) ===== */
+:root {
+  /* 16px (xs) → 28px (md орчим) → 32px (≥lg) */
+  --gutter: clamp(16px, 5vw, 32px);
+  --card-pad: clamp(14px, 3.5vw, 20px);
+}
+
+/* site container: max width + responsive gutter */
+.site-container {
+  max-width: 80rem;             /* ~1280px */
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ерөнхий card padding-ийг mobile-д жаахан өсгөнө */
+.card {
+  padding: var(--card-pad);
+  border-radius: 16px;
+}
+
+/* хэвтээ scrollbar үүсэхээс сэргийлнэ (зарим image/object-cover үед) */
+html, body {
+  overflow-x: hidden;
+}

@@ -10,15 +10,17 @@ import { news } from "@/data/news";
 import NewsCard from "@/components/NewsCard";
 import ResourceCard from "@/components/ResourceCard";
 
+// ... таны импортууд хэвээр ...
+
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Background image */}
+        {/* Bg image */}
         <div className="absolute inset-0 -z-10">
           <Image
-            src="/hero.png"
+            src="/pixabay.jpg"
             alt="Hero background"
             fill
             priority
@@ -26,7 +28,7 @@ export default function HomePage() {
             className="object-cover"
           />
         </div>
-        {/* Readability overlay */}
+        {/* Overlay */}
         <div className="absolute inset-0 -z-0 bg-black/30 md:bg-black/20" />
 
         <Container>
@@ -43,17 +45,17 @@ export default function HomePage() {
                 harmful drinking through evidence-based initiatives.
               </p>
 
-              {/* CTA buttons: stack on mobile */}
-              <div className="mt-6 flex flex-col xs:flex-row gap-3 w-full max-w-sm sm:max-w-none">
+              {/* CTA buttons */}
+              <div className="mt-6 flex flex-col xs:flex-row gap-3 w-full max-w-lg">
                 <Link
                   href="/initiatives"
-                  className="btn btn-primary w-full xs:w-auto text-sm sm:text-base"
+                  className="btn btn-primary w-full xs:w-auto"
                 >
                   Explore Initiatives
                 </Link>
                 <Link
                   href="/resources"
-                  className="btn btn-ghost w-full xs:w-auto text-sm sm:text-base"
+                  className="btn btn-ghost w-full xs:w-auto"
                 >
                   Browse Resources
                 </Link>
@@ -78,7 +80,7 @@ export default function HomePage() {
             title="Key Initiatives"
             subtitle="Backed by evidence and built with partners."
           />
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {initiatives.map((i) => (
               <Link
                 key={i.id}
@@ -90,9 +92,9 @@ export default function HomePage() {
                   alt={i.title}
                   width={800}
                   height={500}
-                  className="h-40 sm:h-44 md:h-48 w-full object-cover"
+                  className="h-44 sm:h-48 w-full object-cover rounded-xl"
                 />
-                <div className="space-y-2 p-4 sm:p-5">
+                <div className="space-y-2 p-0 sm:p-0 mt-3">
                   <h3 className="text-base sm:text-lg font-bold">{i.title}</h3>
                   <p className="text-sm text-[color:var(--muted)]">
                     {i.summary}
@@ -115,7 +117,7 @@ export default function HomePage() {
       <section className="py-8 sm:py-10">
         <Container>
           <SectionHeading eyebrow="What’s New" title="Latest News" />
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {news.map((n) => (
               <NewsCard key={n.id} n={n} />
             ))}
@@ -135,7 +137,7 @@ export default function HomePage() {
             eyebrow="For Practitioners"
             title="Featured Resources"
           />
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {resources.map((r) => (
               <ResourceCard key={r.id} r={r} />
             ))}
@@ -151,7 +153,7 @@ export default function HomePage() {
             title="Members & Partners"
             subtitle="We collaborate globally across sectors."
           />
-          <div className="px-1 sm:px-0">
+          <div className="px-0">
             <PartnerCarousel />
           </div>
         </Container>
