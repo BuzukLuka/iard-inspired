@@ -93,7 +93,7 @@ export default function Header() {
         id="mobile-menu"
         ref={panelRef}
         tabIndex={-1}
-        className={`fixed right-0 top-0 h-full w-[82%] max-w-[360px] bg-white/20
+        className={`fixed right-0 top-0 h-full w-[82%] max-w-[360px] bg-black/50
           shadow-2xl border-l border-[color:var(--border)]
           focus:outline-none overscroll-contain
           transform transition-transform duration-300 will-change-transform
