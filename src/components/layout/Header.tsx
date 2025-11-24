@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -40,10 +39,8 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setShowLoginModal(true)}
-              className="relative flex h-10 w-10 items-center justify-center
-                         rounded-full border border-white/30 bg-black/50
-                         hover:bg-white/10 transition-colors"
-              aria-label="Нэвтрэх"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/50 hover:bg-white/10 transition-colors"
+              aria-label="Login"
             >
               <User2 className="h-5 w-5 text-white/80" />
             </button>
@@ -79,10 +76,9 @@ export default function Header() {
 
           {/* Panel */}
           <div
-            className={`fixed right-0 top-0 h-full w-[82%] max-w-[360px] bg-black/70
-                        shadow-2xl border-l border-[color:var(--border)]
-                        transform transition-transform duration-300
-                        ${open ? "translate-x-0" : "translate-x-full"}`}
+            className={`fixed right-0 top-0 h-full w-[82%] max-w-[360px] bg-black/70 shadow-2xl border-l border-[color:var(--border)] transform transition-transform duration-300 ${
+              open ? "translate-x-0" : "translate-x-full"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top */}
@@ -95,7 +91,6 @@ export default function Header() {
                 <Image src="/logo.png" alt="Logo" width={28} height={28} />
                 <span className="font-extrabold">Alliance Hub</span>
               </Link>
-
               <button className="icon-btn" onClick={() => setOpen(false)}>
                 <X />
               </button>
@@ -127,9 +122,8 @@ export default function Header() {
                     setShowLoginModal(true);
                   }}
                 >
-                  Нэвтрэх
+                  Login
                 </button>
-
                 <button
                   type="button"
                   className="btn btn-primary w-full"
@@ -138,7 +132,7 @@ export default function Header() {
                     setShowSignupModal(true);
                   }}
                 >
-                  Бүртгүүлэх
+                  Sign Up
                 </button>
               </div>
             </nav>
@@ -157,14 +151,11 @@ export default function Header() {
 
           {/* Center card */}
           <div
-            className="fixed left-1/2 top-1/2 z-[71]
-                       w-full max-w-md -translate-x-1/2 -translate-y-1/2
-                       rounded-2xl border border-white/10
-                       bg-[#06060b]/95 p-6 shadow-2xl"
+            className="fixed left-1/2 top-1/2 z-[71] w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#06060b]/95 p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Нэвтрэх</h2>
+              <h2 className="text-lg font-semibold">Login</h2>
               <button
                 type="button"
                 className="icon-btn"
@@ -176,7 +167,7 @@ export default function Header() {
 
             <form className="space-y-4">
               <div className="space-y-1">
-                <label className="text-sm text-white/70">И-мэйл</label>
+                <label className="text-sm text-white/70">Email</label>
                 <input
                   type="email"
                   className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
@@ -185,7 +176,7 @@ export default function Header() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm text-white/70">Нууц үг</label>
+                <label className="text-sm text-white/70">Password</label>
                 <input
                   type="password"
                   className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
@@ -194,12 +185,12 @@ export default function Header() {
               </div>
 
               <button type="submit" className="btn btn-primary w-full">
-                Нэвтрэх
+                Login
               </button>
             </form>
 
             <div className="mt-4 text-center text-sm text-white/70">
-              Бүртгүүлэх гэж байна уу?{" "}
+              Don’t have an account?{" "}
               <button
                 type="button"
                 className="text-[color:var(--accent)] font-semibold hover:underline"
@@ -208,7 +199,7 @@ export default function Header() {
                   setShowSignupModal(true);
                 }}
               >
-                Бүртгүүлэх
+                Sign Up
               </button>
             </div>
           </div>
@@ -226,14 +217,11 @@ export default function Header() {
 
           {/* Center card */}
           <div
-            className="fixed left-1/2 top-1/2 z-[71]
-                       w-full max-w-md -translate-x-1/2 -translate-y-1/2
-                       rounded-2xl border border-white/10
-                       bg-[#06060b]/95 p-6 shadow-2xl"
+            className="fixed left-1/2 top-1/2 z-[71] w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#06060b]/95 p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Бүртгүүлэх</h2>
+              <h2 className="text-lg font-semibold">Sign Up</h2>
               <button
                 type="button"
                 className="icon-btn"
@@ -245,16 +233,16 @@ export default function Header() {
 
             <form className="space-y-4">
               <div className="space-y-1">
-                <label className="text-sm text-white/70">Нэр</label>
+                <label className="text-sm text-white/70">Name</label>
                 <input
                   type="text"
                   className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
-                  placeholder="Таны нэр"
+                  placeholder="Your name"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm text-white/70">И-мэйл</label>
+                <label className="text-sm text-white/70">Email</label>
                 <input
                   type="email"
                   className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
@@ -263,7 +251,7 @@ export default function Header() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm text-white/70">Нууц үг</label>
+                <label className="text-sm text-white/70">Password</label>
                 <input
                   type="password"
                   className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
@@ -272,12 +260,12 @@ export default function Header() {
               </div>
 
               <button type="submit" className="btn btn-primary w-full">
-                Бүртгүүлэх
+                Sign Up
               </button>
             </form>
 
             <div className="mt-4 text-center text-sm text-white/70">
-              Аль хэдийн бүртгэлтэй юу?{" "}
+              Already have an account?{" "}
               <button
                 type="button"
                 className="text-[color:var(--accent)] font-semibold hover:underline"
@@ -286,7 +274,7 @@ export default function Header() {
                   setShowLoginModal(true);
                 }}
               >
-                Нэвтрэх
+                Login
               </button>
             </div>
           </div>
