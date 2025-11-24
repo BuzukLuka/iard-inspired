@@ -6,18 +6,24 @@ import Stats from "@/components/Stats";
 import PartnerCarousel from "@/components/PartnerCarousel";
 import { initiatives } from "@/data/initiatives";
 import { resources } from "@/data/resources";
-import { news } from "@/data/news";
+import { fetchAPI } from "@/lib/api";
+import type { News } from "@/lib/types/news";
 import NewsCard from "@/components/NewsCard";
 import ResourceCard from "@/components/ResourceCard";
 
-// ... таны импортууд хэвээр ...
+export const revalidate = 60; // re-fetch every 60s
 
-export default function HomePage() {
+export default async function HomePage() {
+  // ✅ News API fetch
+  const data = await fetchAPI<{ results?: News[] }>("news/");
+  const news = Array.isArray(data) ? data : data?.results || [];
+  console.log(news?.[0].cover, "tesstststs");
+
   return (
     <>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Bg image */}
+        {/* Background image */}
         <div className="absolute inset-0 -z-10">
           <Image
             src="/pixabay.jpg"
@@ -28,8 +34,7 @@ export default function HomePage() {
             className="object-cover"
           />
         </div>
-        {/* Overlay */}
-        <div className="absolute inset-0 -z-0 bg-black/30 md:bg-black/20" />
+        <div className="absolute inset-0 bg-black/30 md:bg-black/20 -z-0" />
 
         <Container>
           <div className="py-14 sm:py-16 md:py-20 lg:py-28">
@@ -45,7 +50,7 @@ export default function HomePage() {
                 harmful drinking through evidence-based initiatives.
               </p>
 
-              {/* CTA buttons */}
+              {/* CTA */}
               <div className="mt-6 flex flex-col xs:flex-row gap-3 w-full max-w-lg">
                 <Link
                   href="/initiatives"
@@ -94,7 +99,7 @@ export default function HomePage() {
                   height={500}
                   className="h-44 sm:h-48 w-full object-cover rounded-xl"
                 />
-                <div className="space-y-2 p-0 sm:p-0 mt-3">
+                <div className="space-y-2 p-0 mt-3">
                   <h3 className="text-base sm:text-lg font-bold">{i.title}</h3>
                   <p className="text-sm text-[color:var(--muted)]">
                     {i.summary}

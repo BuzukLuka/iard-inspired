@@ -1,29 +1,92 @@
 import Container from "@/components/Container";
-import { news } from "@/data/news";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { fetchAPI } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 
-export default function NewsArticle({ params }: { params: { slug: string } }) {
-  const n = news.find((x) => x.slug === params.slug);
+// ==================== TYPES ====================
+type News = {
+  id: number | string;
+  slug: string;
+  title: string;
+  published_at?: string;
+  cover?: string;
+  body?: string;
+};
+
+// ==================== HELPERS ====================
+function resolveImageSrc(url?: string | null): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+
+  // Бүрэн URL бол шууд буцаана
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+
+  // Харьцангуй path бол API_URL-тэй холбож буцаана
+  const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
+  if (trimmed.startsWith("/")) return `${base}${trimmed}`;
+  return `${base}/${trimmed}`;
+}
+
+// ==================== API ====================
+async function getNewsBySlug(slug: string): Promise<News | null> {
+  try {
+    const res = await fetchAPI(`/news/?slug=${encodeURIComponent(slug)}`);
+    const data = res?.results?.[0];
+    return data ?? null;
+  } catch (e) {
+    console.error("Failed to fetch news:", e);
+    return null;
+  }
+}
+
+// ==================== PAGE COMPONENT ====================
+export default async function NewsArticle({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params; // ✅ async params хэрэглэнэ
+  const n = await getNewsBySlug(slug);
+
   if (!n) return notFound();
+
+  const imgSrc = resolveImageSrc(n.cover);
+
   return (
     <article className="py-12">
       <Container>
-        <p className="text-xs text-brand-gray">{formatDate(n.date)}</p>
-        <h1 className="mt-1 text-3xl">{n.title}</h1>
-        <div className="mt-4 overflow-hidden rounded-xl2 border-2 border-black/10">
-          <Image
-            src={n.image}
-            alt={n.title}
-            width={1200}
-            height={600}
-            className="h-72 w-full object-cover"
-          />
+        <p className="text-xs text-gray-400">
+          {n.published_at ? formatDate(n.published_at) : ""}
+        </p>
+
+        <h1 className="mt-1 text-3xl font-bold">{n.title}</h1>
+
+        <div className="mt-4 overflow-hidden rounded-xl border border-black/10">
+          {imgSrc ? (
+            <Image
+              src={imgSrc}
+              alt={n.title}
+              width={1200}
+              height={600}
+              className="h-72 w-full object-cover"
+            />
+          ) : (
+            <div className="h-72 w-full bg-gray-100 flex items-center justify-center text-sm text-gray-500">
+              No image
+            </div>
+          )}
         </div>
-        <div className="prose prose-lg mt-6 max-w-3xl">
-          <p>{n.content}</p>
-        </div>
+
+        <div
+          className="prose prose-lg mt-6 max-w-3xl"
+          dangerouslySetInnerHTML={{
+            __html: n.body ?? "",
+          }}
+        />
       </Container>
     </article>
   );

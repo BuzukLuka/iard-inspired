@@ -98,7 +98,7 @@ a {
   text-underline-offset: 3px;
   text-decoration-thickness: 0.06em;
 }
-a:hover {
+a:hover:not(.btn) {
   color: var(--link-hover);
 }
 
