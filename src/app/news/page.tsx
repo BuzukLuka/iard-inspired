@@ -8,22 +8,20 @@ type News = {
   id: number | string;
   slug: string;
   title: string;
-  date: string;
-  image?: any;
+  date?: string;
+  published_at?: string;
+  cover?: any;
   excerpt?: string;
 };
 
 export const revalidate = 60;
 
 export default async function NewsIndex(): Promise<ReactElement> {
-  // Нормалчлах: API нь массив эсвэл pagination object эсвэл single object буцааж болно
   let data: any = null;
   try {
-    data = await fetchAPI("/news/"); // та Django-д энэ endpoint-ийг ашиглаарай
+    data = await fetchAPI("/news/");
   } catch (err) {
-    // Солигдож болох endpoint хэлбэрүүдийг өөр аргаар авах гэж оролдоно
     console.error("Fetch /news/ failed:", err);
-    // Та энд лог гаргаж үзэх боломжтой: console.log(JSON.stringify(err))
     data = null;
   }
 
@@ -36,7 +34,6 @@ export default async function NewsIndex(): Promise<ReactElement> {
   } else if (data && Array.isArray(data.data)) {
     newsList = data.data;
   } else if (data && typeof data === "object" && data.slug) {
-    // single object returned
     newsList = [data];
   } else {
     newsList = [];

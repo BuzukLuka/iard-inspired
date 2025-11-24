@@ -1,10 +1,10 @@
+// src/app/news/[slug]/page.tsx
 import Container from "@/components/Container";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchAPI } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 
-// ==================== TYPES ====================
 type News = {
   id: number | string;
   slug: string;
@@ -20,12 +20,10 @@ function resolveImageSrc(url?: string | null): string | null {
   const trimmed = url.trim();
   if (!trimmed) return null;
 
-  // Бүрэн URL бол шууд буцаана
   if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
     return trimmed;
   }
 
-  // Харьцангуй path бол API_URL-тэй холбож буцаана
   const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
   if (trimmed.startsWith("/")) return `${base}${trimmed}`;
   return `${base}/${trimmed}`;
@@ -34,9 +32,18 @@ function resolveImageSrc(url?: string | null): string | null {
 // ==================== API ====================
 async function getNewsBySlug(slug: string): Promise<News | null> {
   try {
-    const res = await fetchAPI(`/news/?slug=${encodeURIComponent(slug)}`);
-    const data = res?.results?.[0];
-    return data ?? null;
+    const res = await fetchAPI<any>("/news/");
+
+    const list: any[] = Array.isArray(res)
+      ? res
+      : Array.isArray(res?.results)
+      ? res.results
+      : Array.isArray(res?.data)
+      ? res.data
+      : [];
+
+    const found = list.find((item) => item.slug === slug);
+    return found ?? null;
   } catch (e) {
     console.error("Failed to fetch news:", e);
     return null;
@@ -49,7 +56,9 @@ export default async function NewsArticle({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // ✅ async params хэрэглэнэ
+  // 🔧 Энд заавал await хийнэ
+  const { slug } = await params;
+
   const n = await getNewsBySlug(slug);
 
   if (!n) return notFound();

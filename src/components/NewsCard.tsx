@@ -8,7 +8,9 @@ type News = {
   id: number | string;
   slug: string;
   title: string;
-  date: string;
+  // backend-аас ирж болох хоёр хувилбар
+  date?: string;
+  published_at?: string;
   cover?: any; // could be string, object {url}, null etc
   excerpt?: string;
   content?: string;
@@ -44,11 +46,11 @@ function resolveImageSrc(img: any): string | null {
 
 export default function NewsCard({ n }: { n: News }) {
   const src = resolveImageSrc(n.cover);
+  const dateStr = n.published_at || n.date || ""; // 👈 аль нь байгааг ашиглана
 
   return (
     <Card>
       {src ? (
-        // Only render <Image> when we have a valid string src
         <Image
           src={src}
           alt={n.title ?? "news image"}
@@ -63,7 +65,10 @@ export default function NewsCard({ n }: { n: News }) {
       )}
 
       <div className="space-y-2 p-4">
-        <p className="text-xs text-brand-gray">{formatDate(n.date)}</p>
+        <p className="text-xs text-brand-gray">
+          {dateStr ? formatDate(dateStr) : ""}{" "}
+          {/* ✅ Invalid Date алга болно */}
+        </p>
         <h3 className="text-lg font-bold">{n.title}</h3>
         <p className="text-sm text-brand-gray">{n.excerpt}</p>
         <div className="pt-2">

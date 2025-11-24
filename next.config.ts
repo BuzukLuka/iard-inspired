@@ -1,21 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // 🆕 Next.js 15-д тохирсон remotePatterns
     remotePatterns: [
       {
         protocol: "http",
         hostname: "localhost",
-        port: "8000", // Django API
+        port: "8000", // Django API (хэрвээ хааяа localhost ашиглавал)
+        pathname: "/media/**",
+      },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1", // <-- ЧИНИЙ ОДОО АШИГЛАЖ БАЙГАА
+        port: "8000",
+        pathname: "/media/**", // зөвхөн /media/... зураг зөвшөөрнө
       },
       {
         protocol: "https",
-        hostname: "**", // CDN эсвэл гадаад URL-ууд
+        hostname: "**", // CDN/гадаад https зураг
       },
     ],
   },
   experimental: {
-    // Турбопак эсвэл server actions зэрэг онцлогийг идэвхжүүлж болно
     turbo: true,
   },
 };
