@@ -17,7 +17,6 @@ export default async function HomePage() {
   // ✅ News API fetch
   const data = await fetchAPI<{ results?: News[] }>("news/");
   const news = Array.isArray(data) ? data : data?.results || [];
-  console.log(news?.[0].cover, "tesstststs");
 
   return (
     <>
