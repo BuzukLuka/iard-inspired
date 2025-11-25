@@ -10,12 +10,12 @@ type News = {
   title: string;
   date?: string;
   published_at?: string;
-  cover?: any; // could be string, object {url}, null etc
+  cover?: unknown; // 👈 any биш
   excerpt?: string;
   content?: string;
 };
 
-function resolveImageSrc(img: any): string | null {
+function resolveImageSrc(img: unknown): string | null {
   if (!img) return null;
 
   if (typeof img === "string") {
@@ -23,19 +23,23 @@ function resolveImageSrc(img: any): string | null {
     if (!s) return null;
     if (s.startsWith("http://") || s.startsWith("https://")) return s;
 
-    // relative path from backend like "/media/xxx.jpg"
     const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
     if (s.startsWith("/")) {
       return base ? `${base}${s}` : s;
     }
-    // plain filename like "uploads/x.jpg"
     return base ? `${base}/${s}` : s;
   }
 
-  if (typeof img === "object") {
-    if (img.url) return resolveImageSrc(img.url);
-    if (img.src) return resolveImageSrc(img.src);
-    if (img.file) return resolveImageSrc(img.file);
+  if (typeof img === "object" && img !== null) {
+    const obj = img as {
+      url?: unknown;
+      src?: unknown;
+      file?: unknown;
+    };
+
+    if (typeof obj.url === "string") return resolveImageSrc(obj.url);
+    if (typeof obj.src === "string") return resolveImageSrc(obj.src);
+    if (typeof obj.file === "string") return resolveImageSrc(obj.file);
   }
 
   return null;
@@ -47,7 +51,6 @@ export default function NewsCard({ n }: { n: News }) {
 
   return (
     <Card>
-      {/* Бүх картын доторхийг flex column болгоно */}
       <div className="flex h-full flex-col">
         {src ? (
           <Image
@@ -63,7 +66,6 @@ export default function NewsCard({ n }: { n: News }) {
           </div>
         )}
 
-        {/* Доод хэсэг – текст + Read more */}
         <div className="flex flex-1 flex-col p-4">
           <div className="space-y-2">
             <p className="text-xs text-brand-gray">
@@ -73,7 +75,6 @@ export default function NewsCard({ n }: { n: News }) {
             <p className="text-sm text-brand-gray">{n.excerpt}</p>
           </div>
 
-          {/* mt-auto → үргэлж картыг доод тал руу шахна */}
           <div className="pt-2 mt-auto">
             <Link href={`/news/${n.slug}`} className="btn btn-outline">
               Read more

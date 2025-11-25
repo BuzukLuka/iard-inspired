@@ -2,22 +2,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, User2 } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import nav from "@/data/navigation";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignupModal, setShowSignupModal] = useState(false);
-
-  const closeAllModals = () => {
-    setShowLoginModal(false);
-    setShowSignupModal(false);
-  };
 
   return (
     <>
-      <header className="sticky top-0 z-50 header-glass">
+      <header className="sticky top-0 z-40 header-glass">
         <div className="site-container flex items-center justify-between py-3">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
@@ -35,17 +28,13 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* Profile icon – opens LOGIN MODAL */}
-            <button
-              type="button"
-              onClick={() => setShowLoginModal(true)}
-              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/50 hover:bg-white/10 transition-colors"
-              aria-label="Login"
+            <Link
+              href="https://learn.mfia.org.mn/login/index.php"
+              className="btn btn-secondary"
             >
-              <User2 className="h-5 w-5 text-white/80" />
-            </button>
+              Login
+            </Link>
 
-            {/* Contact */}
             <Link href="/contact" className="btn btn-primary">
               Contact
             </Link>
@@ -59,227 +48,78 @@ export default function Header() {
             <Menu />
           </button>
         </div>
+      </header>
 
-        {/* MOBILE MENU */}
-        <div
-          className={`fixed inset-0 z-[60] md:hidden transition-opacity duration-300 ${
+      {/* MOBILE FULLSCREEN MENU (always in DOM for smooth animation) */}
+      <div
+        className={`
+          fixed inset-0 z-[90] md:hidden
+          bg-black/70 backdrop-blur-md text-white
+          transition-opacity duration-300 ease-out
+          ${
             open
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
-          }`}
+          }
+        `}
+        onClick={() => setOpen(false)} // хоосон хэсэг дээр дарвал хаана
+      >
+        {/* Panel – баруун талаас жигд слайдтай гарч ирнэ */}
+        <div
+          className={`
+            ml-auto flex h-full w-[82%] max-w-[360px] flex-col
+            bg-black/90 border-l border-white/10 shadow-2xl
+            transform transition-transform duration-300 ease-out
+            ${open ? "translate-x-0" : "translate-x-full"}
+          `}
+          onClick={(e) => e.stopPropagation()} // дотор нь дарахад битгий хааг
         >
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 backdrop-blur-sm bg-black/40"
-            onClick={() => setOpen(false)}
-          />
+          {/* Дээд мөр */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+            <Link
+              href="/"
+              className="flex items-center gap-2"
+              onClick={() => setOpen(false)}
+            >
+              <Image src="/logo.png" alt="Logo" width={28} height={28} />
+              <span className="font-extrabold">Alliance Hub</span>
+            </Link>
+            <button className="icon-btn" onClick={() => setOpen(false)}>
+              <X className="text-white" />
+            </button>
+          </div>
 
-          {/* Panel */}
-          <div
-            className={`fixed right-0 top-0 h-full w-[82%] max-w-[360px] bg-black/70 shadow-2xl border-l border-[color:var(--border)] transform transition-transform duration-300 ${
-              open ? "translate-x-0" : "translate-x-full"
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Top */}
-            <div className="flex items-center justify-between border-b border-[color:var(--border)] p-4">
-              <Link
-                href="/"
-                className="flex items-center gap-2"
+          {/* Меню линкүүд */}
+          <nav className="px-4 py-5 space-y-4">
+            <ul className="space-y-2">
+              {nav.map((n) => (
+                <li key={n.href}>
+                  <Link
+                    href={n.href}
+                    className="block rounded-lg px-3 py-2 nav-item text-sm font-medium text-white/90"
+                    onClick={() => setOpen(false)}
+                  >
+                    {n.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {/* Login */}
+            <div className="pt-2">
+              <a
+                href="https://learn.mfia.org.mn/login/index.php"
+                className="inline-flex rounded-full px-4 py-2 text-sm font-semibold text-[color:var(--accent)] bg-white/5 border border-white/15"
                 onClick={() => setOpen(false)}
               >
-                <Image src="/logo.png" alt="Logo" width={28} height={28} />
-                <span className="font-extrabold">Alliance Hub</span>
-              </Link>
-              <button className="icon-btn" onClick={() => setOpen(false)}>
-                <X />
-              </button>
+                Login
+              </a>
             </div>
+          </nav>
 
-            {/* Nav Items */}
-            <nav className="p-4">
-              <ul className="space-y-2">
-                {nav.map((n) => (
-                  <li key={n.href}>
-                    <Link
-                      href={n.href}
-                      className="block rounded-lg px-3 py-2 nav-item"
-                      onClick={() => setOpen(false)}
-                    >
-                      {n.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Mobile login/signup -> modals */}
-              <div className="mt-6 space-y-3">
-                <button
-                  type="button"
-                  className="btn btn-secondary w-full"
-                  onClick={() => {
-                    setOpen(false);
-                    setShowLoginModal(true);
-                  }}
-                >
-                  Login
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary w-full"
-                  onClick={() => {
-                    setOpen(false);
-                    setShowSignupModal(true);
-                  }}
-                >
-                  Sign Up
-                </button>
-              </div>
-            </nav>
-          </div>
+          <div className="flex-1" />
         </div>
-      </header>
-
-      {/* LOGIN MODAL */}
-      {showLoginModal && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm"
-            onClick={closeAllModals}
-          />
-
-          {/* Center card */}
-          <div
-            className="fixed left-1/2 top-1/2 z-[71] w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#06060b]/95 p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Login</h2>
-              <button
-                type="button"
-                className="icon-btn"
-                onClick={closeAllModals}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <form className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-sm text-white/70">Email</label>
-                <input
-                  type="email"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
-                  placeholder="name@example.com"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-sm text-white/70">Password</label>
-                <input
-                  type="password"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
-                  placeholder="••••••••"
-                />
-              </div>
-
-              <button type="submit" className="btn btn-primary w-full">
-                Login
-              </button>
-            </form>
-
-            <div className="mt-4 text-center text-sm text-white/70">
-              Don’t have an account?{" "}
-              <button
-                type="button"
-                className="text-[color:var(--accent)] font-semibold hover:underline"
-                onClick={() => {
-                  setShowLoginModal(false);
-                  setShowSignupModal(true);
-                }}
-              >
-                Sign Up
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* SIGNUP MODAL */}
-      {showSignupModal && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm"
-            onClick={closeAllModals}
-          />
-
-          {/* Center card */}
-          <div
-            className="fixed left-1/2 top-1/2 z-[71] w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#06060b]/95 p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Sign Up</h2>
-              <button
-                type="button"
-                className="icon-btn"
-                onClick={closeAllModals}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <form className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-sm text-white/70">Name</label>
-                <input
-                  type="text"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
-                  placeholder="Your name"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-sm text-white/70">Email</label>
-                <input
-                  type="email"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
-                  placeholder="name@example.com"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-sm text-white/70">Password</label>
-                <input
-                  type="password"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[color:var(--accent)]"
-                  placeholder="••••••••"
-                />
-              </div>
-
-              <button type="submit" className="btn btn-primary w-full">
-                Sign Up
-              </button>
-            </form>
-
-            <div className="mt-4 text-center text-sm text-white/70">
-              Already have an account?{" "}
-              <button
-                type="button"
-                className="text-[color:var(--accent)] font-semibold hover:underline"
-                onClick={() => {
-                  setShowSignupModal(false);
-                  setShowLoginModal(true);
-                }}
-              >
-                Login
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      </div>
     </>
   );
 }

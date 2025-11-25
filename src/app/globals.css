@@ -283,8 +283,7 @@ img,
 .mobile-drawer {
   position: absolute;
   top: 0;
-  right: 0; /* anchor to right */
-  left: auto;
+  right: 0;
   height: 100%;
   width: 80%;
   max-width: 20rem;
@@ -323,14 +322,29 @@ img,
   border-radius: 9999px;
   border: 1px solid var(--border);
   font-weight: 700;
+  cursor: pointer; /* ← заагч гар болгоно */
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
     transform 0.05s ease, box-shadow 0.15s ease;
   box-shadow: var(--shadow-sm);
 }
+
+/* Бүх товчлуурт нийтлэг hover animation */
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* дарахад бага зэрэг буцаад сууна */
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
 .btn:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
   outline-offset: 2px;
 }
+
 .btn-primary {
   background: var(--accent);
   color: white;
@@ -338,9 +352,9 @@ img,
 }
 .btn-primary:hover {
   background: var(--accent-600);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  /* transform/box-shadow нь .btn:hover-оос ирнэ */
 }
+
 .btn-ghost {
   background: transparent;
   color: var(--foreground);
@@ -350,6 +364,7 @@ img,
   color: var(--foreground);
   border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
 }
+
 
 /* ---------- Cards (soft, elevated) ---------- */
 .card {

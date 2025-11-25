@@ -14,6 +14,11 @@ type News = {
   body?: string;
 };
 
+// backend-аас буцаж болох хэлбэрүүд
+type NewsListResponse = News[] | { results: News[] } | { data: News[] };
+
+type NewsApiResponse = NewsListResponse | News | null;
+
 // ==================== HELPERS ====================
 function resolveImageSrc(url?: string | null): string | null {
   if (!url) return null;
@@ -32,15 +37,17 @@ function resolveImageSrc(url?: string | null): string | null {
 // ==================== API ====================
 async function getNewsBySlug(slug: string): Promise<News | null> {
   try {
-    const res = await fetchAPI<any>("/news/");
+    const res = await fetchAPI<NewsApiResponse>("/news/");
 
-    const list: any[] = Array.isArray(res)
-      ? res
-      : Array.isArray(res?.results)
-      ? res.results
-      : Array.isArray(res?.data)
-      ? res.data
-      : [];
+    let list: News[] = [];
+
+    if (Array.isArray(res)) {
+      list = res;
+    } else if (res && "results" in res && Array.isArray(res.results)) {
+      list = res.results;
+    } else if (res && "data" in res && Array.isArray(res.data)) {
+      list = res.data;
+    }
 
     const found = list.find((item) => item.slug === slug);
     return found ?? null;
@@ -56,7 +63,6 @@ export default async function NewsArticle({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  // 🔧 Энд заавал await хийнэ
   const { slug } = await params;
 
   const n = await getNewsBySlug(slug);

@@ -10,16 +10,26 @@ type News = {
   title: string;
   date?: string;
   published_at?: string;
-  cover?: any;
+  cover?: unknown;
   excerpt?: string;
 };
+
+// Backend-аас буцаж болох бүх хэлбэрийг нэг дор тодорхойллоо
+type NewsApiResponse =
+  | News[]
+  | { results: News[] }
+  | { data: News[] }
+  | News
+  | null;
 
 export const revalidate = 60;
 
 export default async function NewsIndex(): Promise<ReactElement> {
-  let data: any = null;
+  let data: NewsApiResponse = null;
+
   try {
-    data = await fetchAPI("/news/");
+    // fetchAPI-д generic өгч байгаа тул any хэрэггүй боллоо
+    data = await fetchAPI<NewsApiResponse>("/news/");
   } catch (err) {
     console.error("Fetch /news/ failed:", err);
     data = null;
@@ -29,11 +39,11 @@ export default async function NewsIndex(): Promise<ReactElement> {
 
   if (Array.isArray(data)) {
     newsList = data;
-  } else if (data && Array.isArray(data.results)) {
+  } else if (data && "results" in data && Array.isArray(data.results)) {
     newsList = data.results;
-  } else if (data && Array.isArray(data.data)) {
+  } else if (data && "data" in data && Array.isArray(data.data)) {
     newsList = data.data;
-  } else if (data && typeof data === "object" && data.slug) {
+  } else if (data && typeof data === "object" && "slug" in data) {
     newsList = [data];
   } else {
     newsList = [];
